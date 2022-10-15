@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:doctrine="http://symfony.com/schema/dic/doctrine">
+    <services>
+
+        <service id="skukunin_database_activity.database_connection"
+                 class="SKukunin\DatabaseActivityBundle\Database\Connection"
+                 public="false">
+            <argument type="service" id="database_connection" />
+        </service>
+
+        <service id="SKukunin\DatabaseActivityBundle\Database\Connection"
+                 alias="skukunin_database_activity.database_connection"
+                 public="true" />
+
+        <service id="skukunin_database_activity.service.change_log_service"
+                 class="SKukunin\DatabaseActivityBundle\Service\ChangeLogService">
+            <argument type="service" id="skukunin_database_activity.database_connection" />
+            <argument type="service" id="Symfony\Component\Security\Core\Security" />
+        </service>
+
+        <service id="skukunin_database_activity.event_subscriber.bundle_entity_event_subscriber"
+                 class="SKukunin\DatabaseActivityBundle\EventSubscriber\EntityEventSubscriber"
+                 public="false">
+            <tag name="doctrine.event_subscriber" connection="default" />
+            <argument type="service" id="skukunin_database_activity.service.change_log_service" />
+        </service>
+
+        <service id="SKukunin\DatabaseActivityBundle\EventSubscriber\EntityEventSubscriber"
+                 alias="skukunin_database_activity.event_subscriber.bundle_entity_event_subscriber"
+                 public="true" />
+
+    </services>
+</container>
